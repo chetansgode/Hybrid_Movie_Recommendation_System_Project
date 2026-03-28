@@ -1,0 +1,28 @@
+services:
+
+  fastapi:
+    image: chetansgode/project3-hybrid_movie_recommendation_system-fastapi:latest
+    ports:
+      - "8000:8000"
+    restart: always
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  streamlit:
+    image: chetansgode/project3-hybrid_movie_recommendation_system-streamlit:latest
+    ports:
+      - "8501:8501"
+
+    depends_on:
+      fastapi:
+        condition: service_healthy
+
+    restart: always
+
+    environment:
+      - API_URL=http://fastapi:8000

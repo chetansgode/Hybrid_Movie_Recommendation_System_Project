@@ -1,0 +1,35 @@
+FROM python:3.13-slim
+
+#create file in docker system
+WORKDIR /app
+
+#So Python should search inside /app(container) to find:
+ENV PYTHONPATH=/app 
+
+# 👉 Install curl (for healthcheck)
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
+# Copies requirements
+COPY api/requirement_api.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirement_api.txt
+
+# Copy full project
+COPY . .
+
+EXPOSE 8000
+
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+
+
+#to create image
+#docker build -f docker/Dockerfile.fastapi -t chetansgode/project3-hybrid_movie_recommendation_system-fastapi .
+#then create image
+# docker run -d -p 8000:8000 chetansgode/project3-hybrid_movie_recommendation_system-fastapi
+# then get http://localhost:8000
+#docker ps to check active terminal
+#docker ps -a all terminal
+#docker stop terminal id
+#

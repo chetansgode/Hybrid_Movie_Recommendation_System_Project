@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+
+  fastapi:
+    build:
+      context: ..          #same folder so
+      dockerfile: docker/Dockerfile.fastapi
+    image: chetansgode/project3-hybrid_movie_recommendation_system-fastapi:latest #to get name of image like this
+    ports:
+      - "8000:8000"
+    restart: always
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  streamlit:
+    build:
+      context: ..       #same folder so  go to parent folder (project root)
+      dockerfile: docker/Dockerfile.streamlit
+    image: chetansgode/project3-hybrid_movie_recommendation_system-streamlit:latest  #to get 
+    ports:
+      - "8501:8501"
+    depends_on:
+      fastapi:
+        condition: service_healthy
+    restart: always
+
+    environment:
+      - API_URL=http://fastapi:8000             #for running on docker 
+
+
+#after this follow this
+#docker-compose -f docker/docker-compose.yml up --build
+#  comman  -f for folder   folder/filename
+
+#to give the name of container folder name 
+#docker-compose -f docker/docker-compose.yml -p project-3 up --build
+#                                        container folder name show project-3
+#to stop container
+#docker-compose -f docker/docker-compose.yml -p project-3 down
+#to push docker hub
+# docker push chetansgode/project3-hybrid_movie_recommendation_system-fastapi:latest
+# docker push chetansgode/project3-hybrid_movie_recommendation_system-streamlit:latest

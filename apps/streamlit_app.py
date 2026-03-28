@@ -13,9 +13,11 @@ titles=joblib.load("models/title.pkl")     #already list
 #this app we are using in local system and also in docker file too so url of both are diff to predict same thing
 #adjust url if host url not available then take by default local url 
 
-
+#regular for docker .yml file
 BASE_URL = os.getenv("API_URL", "http://127.0.0.1:8000")
 
+#if want to run fastapi and streamlit separetly then only use this line otherwise use above line
+#BASE_URL = os.getenv("API_URL", "http://host.docker.internal:8000") 
 # http://127.0.0.1:8000/recommendation
 # http://127.0.0.1:8000/evaluate_model
 # http://127.0.0.1:8000/top_n_movie?n=5
