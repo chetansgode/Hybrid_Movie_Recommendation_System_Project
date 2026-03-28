@@ -46,9 +46,6 @@ def top_n_movie(n : int=10):
          return JSONResponse(status_code=500,content={"error": str(e)})
 
 
-
-
-
 @app.post("/recommendation",response_model=RecommendationResponse) #for output verification
 def recommedation_of_movies(data:MovieRequest):    #for input varification
     movie_name= data.movie_name
@@ -59,15 +56,25 @@ def recommedation_of_movies(data:MovieRequest):    #for input varification
         no_of_recommendation
     )
 
-
     try:
-        return JSONResponse(status_code=200,content={
-        "watched_movie": data.movie_name,
-        "recommendations": result.to_dict(orient="records")            #this create dataframe to dict
-    })
+        # Check if result is a string (movie not found case)
+        if isinstance(result, str):
+            return JSONResponse(
+                status_code=404,
+                content={"error": result}
+            )
+
+        # Normal case: result is a DataFrame
+        return JSONResponse(
+            status_code=200,
+            content={
+                "watched_movie": movie_name,
+                "recommendations": result.to_dict(orient="records")    #this create dataframe to dict
+            }
+        )
 
     except Exception as e:
-         return JSONResponse(status_code=500,content={"error": str(e)})
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 
 
