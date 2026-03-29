@@ -215,14 +215,15 @@ project-3-hybrid_movie_recommendation_system
 │   README
  
 ```
-
+---
 
 ##  Screenshots
 
 #### Dashboard Preview:
-```
+
+
 ![Dashboard Preview](Screenshot_desktop.png)
-```
+
 ---
 
 ## 🐳 Docker Setup & Installation
